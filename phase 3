@@ -2,51 +2,77 @@ import time
 
 start_time = None
 elapsed_time = 0
-running = False
+lap_number = 0
+
+
+def display_time(seconds):
+    hours = int(seconds // 3600)
+    minutes = int((seconds % 3600) // 60)
+    secs = seconds % 60
+
+    print(f"Elapsed Time: {hours:02d}:{minutes:02d}:{secs:05.2f}")
+
 
 while True:
     print("\n===== SIMPLE STOPWATCH =====")
     print("1. Start")
     print("2. Stop")
-    print("3. Display")
-    print("4. Reset")
-    print("5. Exit")
+    print("3. Reset")
+    print("4. Display Elapsed Time")
+    print("5. Lap Time")
+    print("6. Exit")
 
-    choice = input("Enter choice: ")
+    choice = input("Enter your choice: ")
 
     if choice == "1":
-        if running:
-            print("Stopwatch is already running!")
+        if start_time is None:
+            start_time = time.perf_counter()
+            print("Stopwatch started successfully!")
         else:
-            start_time = time.time()
-            running = True
-            print("Stopwatch started.")
+            print("Error: Stopwatch is already running.")
 
     elif choice == "2":
-        if not running:
-            print("Stopwatch has not been started!")
+        if start_time is not None:
+            elapsed_time += time.perf_counter() - start_time
+            start_time = None
+
+            print("Stopwatch stopped.")
+            display_time(elapsed_time)
         else:
-            elapsed_time += time.time() - start_time
-            running = False
-            print(f"Stopped: {elapsed_time:.2f} seconds")
+            print("Error: Stopwatch is not running.")
 
     elif choice == "3":
-        if running:
-            current = elapsed_time + (time.time() - start_time)
-        else:
-            current = elapsed_time
-
-        print(f"Elapsed Time: {current:.2f} seconds")
-
-    elif choice == "4":
         start_time = None
         elapsed_time = 0
-        running = False
-        print("Stopwatch reset.")
+        lap_number = 0
+
+        print("Stopwatch reset successfully!")
+
+    elif choice == "4":
+        current_time = elapsed_time
+
+        if start_time is not None:
+            current_time += time.perf_counter() - start_time
+
+        display_time(current_time)
 
     elif choice == "5":
-        print("Thank you!")
+        current_time = elapsed_time
+
+        if start_time is not None:
+            current_time += time.perf_counter() - start_time
+
+            lap_number += 1
+
+            print(f"Lap {lap_number}:")
+            display_time(current_time)
+
+        else:
+            print("Error: Start the stopwatch before recording a lap.")
+
+    elif choice == "6":
+        print("Thank you for using the stopwatch!")
         break
 
     else:
-        print("Invalid choice!")
+        print("Invalid choice! Please enter a number between 1 and 6.")
