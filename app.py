@@ -57,7 +57,7 @@ with col4:
             st.session_state.laps.append(format_time(current_time))
             st.rerun()
         else:
-            st.warning("Stopwatch start karein pehle!")
+            st.warning("Start The Stop Watch First!")
 
 if st.session_state.laps:
     st.subheader("Laps")
